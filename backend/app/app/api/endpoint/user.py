@@ -3,10 +3,7 @@ from sqlalchemy.orm import Session
 from app import schemas
 from app.crud import user as user_crud
 from app.db.get_db import get_db
-from app.security import verify_access_token
-from jose import JWTError
-from .login import oauth2_scheme
-from app.schemas.token import TokenData
+from .login import oauth2_scheme, verify_access_token
 
 
 router = APIRouter(
@@ -28,14 +25,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    try:
-        payload = verify_access_token(token)
-        user_id: int = payload.get("id")
-        if user_id is None:
-            raise credentials_exception
-        token_data = TokenData(user_id=user_id)
-    except JWTError:
-        raise credentials_exception
+    token_data = verify_access_token(token, credentials_exception)
     user = user_crud.get_user(db, user_id=token_data.user_id)
     if user is None:
         raise credentials_exception
