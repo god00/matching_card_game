@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+fastapi-sqlalchemy = "*"
+pydantic = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+numpy = "*"
+python-jose = "*"
+passlib = "*"
+python-dotenv = "*"
+psycopg2 = "*"
+typing-extensions = "*"
+bcrypt = "*"
+python-multipart = "*"
+alembic = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
