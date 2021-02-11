@@ -15,11 +15,11 @@ router = APIRouter(
 
 
 def get_best_global_score(db: Session):
-    return [row[0] for row in game_crud.get_best_global_score(db)] or 0
+    return [row[0] for row in game_crud.get_best_global_score(db)]
 
 
 def get_best_score(db: Session, user_id: int):
-    return [row[0] for row in game_crud.get_best_score(db, user_id)] or 0
+    return [row[0] for row in game_crud.get_best_score(db, user_id)]
 
 
 def new_game():
@@ -91,19 +91,25 @@ async def play_game(db: Session = Depends(get_db), user: schemas.User = Depends(
 
     card_value = game.answer[body.i][body.j]
 
+    game.score += 1
+
     game.actions.append({"i": body.i, "j": body.j})
     if actions_length > 0 and not is_even_action:
         if game.answer[last_action['i']][last_action['j']] == card_value:
             # matched
             game.current_state[body.i][body.j] = card_value
             game.matched += 1
+            if game.score < 12 and game.matched == 6:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Something went wrong.",
+                )
         else:
             # no matched
             game.current_state[last_action['i']][last_action['j']] = 0
     else:
         game.current_state[body.i][body.j] = card_value
 
-    game.score += 1
     flag_modified(game, "actions")
     flag_modified(game, "current_state")
     db.commit()
