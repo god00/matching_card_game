@@ -8,19 +8,25 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.5.0",
     "antd": "^4.12.3",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
+    "jwt-decode": "^3.1.2",
     "next": "latest",
     "react": "^17.0.1",
+    "react-card-flip": "^1.0.11",
     "react-cookie": "^4.0.3",
     "react-dom": "^17.0.1",
+    "react-draggable": "^4.4.3",
+    "react-sound": "^1.2.0",
     "sass": "^1.32.7"
   },
   "devDependencies": {
     "@types/node": "^12.19.16",
     "@types/react": "^16.14.3",
     "@types/react-dom": "^16.9.10",
+    "@types/react-sound": "^1.2.2",
     "typescript": "^4.0.6"
   },
   "license": "MIT"

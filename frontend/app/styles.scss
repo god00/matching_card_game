@@ -1,7 +1,8 @@
 @import "~antd/dist/antd.min.css";
 
 html,
-body {
+body,
+[id="__next"] {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -9,19 +10,26 @@ body {
 
 footer {
   position: absolute;
-  bottom: 30px;
-  right: 30px;
+  bottom: 25px;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .layout-main {
+  min-height: 100%;
+  height: 100%;
+  width: inherit;
   padding: 20px 20px 60px;
+}
+
+.form-login {
+  width: 350px;
 }
 
 .login-tail {
   display: flex;
   justify-content: space-between;
   margin-left: 33.33%;
-  max-width: 33.33%;
   .remember-form {
     .ant-col {
       max-width: 100%;
@@ -29,7 +37,173 @@ footer {
   }
 }
 
+.login-footer {
+  margin-left: 33.33%;
+  a {
+    margin-left: 6px;
+  }
+}
+
+.card {
+  &[card="back"] {
+    .ant-card-body {
+      border: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 64px;
+      font-family: cursive;
+      cursor: auto;
+      user-select: none;
+    }
+  }
+  &[card="front"] {
+    .ant-card-body {
+      margin: 16px;
+    }
+  }
+  .ant-card-body {
+    display: flex;
+    border: 1px solid gray;
+    border-radius: 2px;
+    padding: 4px;
+  }
+
+  &.ant-card-hoverable {
+    border-color: gray;
+  }
+
+  &.ant-card-hoverable:hover {
+    border-color: #a8a8a8;
+    box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%);
+  }
+}
+
+.draggable {
+  z-index: 99;
+  position: absolute;
+  .ant-card-bordered {
+    box-shadow: 4px 4px 12px 0px rgb(117 117 117 / 30%);
+    border-radius: 4px;
+  }
+  .ant-card-head {
+    min-height: 26px;
+    max-height: 26px;
+    padding: 0;
+    .ant-card-head-title {
+      padding: 0 !important;
+    }
+  }
+  .ant-card-body {
+    cursor: auto;
+    height: 60vh;
+    b {
+      font-family: cursive;
+    }
+  }
+  .drag-icon {
+    width: 100%;
+    color: gray;
+    display: flex;
+    justify-content: center;
+
+    b:first-child {
+      margin-right: 1px;
+    }
+    b:nth-child(2) {
+      margin-right: 1px;
+    }
+
+    span {
+      font-size: 20px;
+    }
+  }
+  .card-footer {
+    position: absolute;
+    padding: 6px 0px;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .new-game-button {
+    border-radius: 50%;
+    height: 75px;
+    width: 75px;
+    span {
+      width: 40px;
+      height: 40px;
+      white-space: normal;
+    }
+  }
+}
+
+.game-title {
+  font-size: 64px;
+  margin-top: 7%;
+  margin-bottom: 40px;
+  font-family: cursive;
+  width: 350px;
+  text-align: center;
+  line-height: 72px;
+}
+
+.game-start-layout {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-layout {
+  padding: 64px 128px;
+  background-color: aliceblue;
+  border-radius: 6px;
+  border: 1px solid skyblue;
+}
+
+.start-button-layout {
+  display: flex;
+  margin-bottom: 10%;
+  button:nth-child(2) {
+    margin-left: 120px;
+  }
+}
+
+.cursor {
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 26px;
+}
+
 @media screen and (max-width: 575px) {
+  .game-title {
+    font-size: 48px;
+    margin-top: 7%;
+    margin-bottom: 40px;
+    font-family: cursive;
+    width: 250px;
+    text-align: center;
+    line-height: 72px;
+  }
+
+  .start-button-layout {
+    button:nth-child(2) {
+      margin-left: 40px;
+    }
+  }
+
+  .form-login {
+    width: inherit;
+  }
+
   .login-tail {
     margin-left: 0;
     max-width: 100%;

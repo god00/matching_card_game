@@ -1,10 +1,20 @@
-import { IncomingMessage, ServerResponse } from 'http';
-import { Cookies } from 'react-cookie';
+import { IncomingMessage, ServerResponse } from 'http'
+import { Cookies } from 'react-cookie'
+import jwtDecode from 'jwt-decode'
+
 import { verifyTokenAPI } from '../api/auth/verify'
 
-const cookies = new Cookies();
+const cookies = new Cookies()
+interface ITokenPayload {
+    id: number
+}
 
-export async function handleAuthSSR(req: IncomingMessage, res: ServerResponse) {
+export interface IHandleAuthSSRResult {
+    isAuthenticated?: boolean,
+    userID?: number
+}
+
+export const handleAuthSSR = async (req?: IncomingMessage, res?: ServerResponse, pathname?: string): Promise<IHandleAuthSSRResult> => {
     let token = null;
 
     if (req && req.headers && req.headers.cookie) {
@@ -19,13 +29,16 @@ export async function handleAuthSSR(req: IncomingMessage, res: ServerResponse) {
             throw new Error('Permission Denied')
         }
         await verifyTokenAPI(token)
-        return true
-        // dont really care about response, as long as it not an error
+        const decoded = jwtDecode(token) as ITokenPayload
+        return { isAuthenticated: true, userID: decoded && decoded.id }
     } catch (err) {
         // redirect to login
-        res.writeHead(302, {
-            Location: '/login'
-        })
-        res.end()
+        if (res && pathname !== '/login') {
+            res.writeHead(302, {
+                Location: '/login'
+            })
+            res.end()
+        }
+        return {}
     }
 }
