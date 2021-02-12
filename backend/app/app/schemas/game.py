@@ -7,9 +7,8 @@ class GameBase(BaseModel):
     score: int
 
 class GameAction(BaseModel):
-    i: int
-    j: int
-    game_id: int
+    row: int
+    col: int
 
 
 class GameCreate(GameBase):

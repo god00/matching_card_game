@@ -15,7 +15,7 @@ const Layout = ({ children, title = 'Matching Card Game' }: Props) => (
     </Head>
     {children}
     <footer>
-      <span style={{ whiteSpace: 'nowrap' }}>Powered by Phosawat Ongmorakot</span>
+      <span style={{ whiteSpace: 'nowrap', color: 'darkgray' }}>Powered by Phosawat Ongmorakot</span>
     </footer>
   </div>
 )

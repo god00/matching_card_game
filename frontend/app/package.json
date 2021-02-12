@@ -20,7 +20,8 @@
     "react-dom": "^17.0.1",
     "react-draggable": "^4.4.3",
     "react-sound": "^1.2.0",
-    "sass": "^1.32.7"
+    "sass": "^1.32.7",
+    "use-sound": "^2.0.1"
   },
   "devDependencies": {
     "@types/node": "^12.19.16",

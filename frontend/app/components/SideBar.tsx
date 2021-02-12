@@ -2,9 +2,17 @@ import React from 'react'
 import { Card, Button } from 'antd';
 import Draggable from 'react-draggable'
 
-const SideBar = () => {
+type Props = {
+    score?: number
+    bestScore?: number
+    bestGlobalScore?: number
+    onClickNewGame: () => {}
+}
+
+const SideBar = (props: Props) => {
+    const { score, bestScore, bestGlobalScore, onClickNewGame = () => { } } = props
     return (
-        <Draggable bounds="body" handle="strong" defaultClassName='draggable' defaultPosition={{ x: -128, y: 0 }}>
+        <Draggable bounds="body" handle="strong" defaultClassName='draggable' defaultPosition={{ x: -50, y: 64 }}>
             <div className="box no-cursor">
                 <Card
                     hoverable
@@ -12,13 +20,13 @@ const SideBar = () => {
                     title={<strong className="cursor"><div className='drag-icon'><b>.</b><b>.</b><b>.</b></div></strong>}
                 >
                     <p>Score</p>
-                    <b>-</b>
+                    <b>{score || '-'}</b>
                     <p style={{ marginTop: 30 }}>My best</p>
-                    <b>-</b>
+                    <b>{bestScore || '-'}</b>
                     <p style={{ marginTop: 30 }}>Global Best</p>
-                    <b>-</b>
+                    <b>{bestGlobalScore || '-'}</b>
                     <div className='card-footer'>
-                        <Button className='new-game-button' type="primary" block>New Game</Button>
+                        <Button className='new-game-button' type="primary" block onClick={onClickNewGame}>New Game</Button>
                     </div>
                 </Card>
             </div>

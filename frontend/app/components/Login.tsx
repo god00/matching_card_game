@@ -16,8 +16,10 @@ const layout = {
 
 const Login = () => {
     const [visibleModal, setVisibleModal] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const onFinish = async (values: any) => {
+        setLoading(true)
         const { username, password, remember } = values
         const response = await loginAPI(username, password)
             .catch(err => {
@@ -37,16 +39,18 @@ const Login = () => {
             // go to /game
             Router.push('/game')
         }
+        setLoading(false)
     }
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo)
-    }
+    // const onFinishFailed = (errorInfo: any) => {
+    //     console.log('Failed:', errorInfo)
+    // }
 
     const onSubmitRegister = async ({ username, password }: IFormRegister) => {
         await registerAPI(username, password)
             .then(() => {
                 notification.success({ message: 'Success', description: 'Register successfully' })
+                setVisibleModal(false)
             })
             .catch(err => {
                 notification.error({
@@ -71,22 +75,28 @@ const Login = () => {
                 name="login"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
+                // onFinishFailed={onFinishFailed}
             >
                 <Form.Item
                     label="Username"
                     name="username"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
+                    rules={[
+                        { required: true, message: 'Please input your username!' },
+                        { min: 6, message: 'Username must be at least 6 chars' },
+                    ]}
                 >
-                    <Input />
+                    <Input maxLength={20} />
                 </Form.Item>
 
                 <Form.Item
                     label="Password"
                     name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
+                    rules={[
+                        { required: true, message: 'Please input your password!' },
+                        { min: 8, message: 'Password must be at least 8 chars' },
+                    ]}
                 >
-                    <Input.Password />
+                    <Input.Password maxLength={20} />
                 </Form.Item>
 
                 <div className='login-tail'>
@@ -95,9 +105,9 @@ const Login = () => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">
+                        <Button loading={loading} type="primary" htmlType="submit">
                             Submit
-                    </Button>
+                        </Button>
                     </Form.Item>
                 </div>
                 <span className='login-footer'>Not a member? <a onClick={() => { setVisibleModal(true) }}>Signup now</a></span>

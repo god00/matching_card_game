@@ -10,7 +10,7 @@ body,
 
 footer {
   position: absolute;
-  bottom: 25px;
+  bottom: 16px;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -59,8 +59,14 @@ footer {
     }
   }
   &[card="front"] {
+    &[ready="false"] {
+      cursor: auto;
+      user-select: none;
+    }
     .ant-card-body {
+      height: calc(100% - 32px);
       margin: 16px;
+      background-color: whitesmoke;
     }
   }
   .ant-card-body {
@@ -85,11 +91,12 @@ footer {
   position: absolute;
   .ant-card-bordered {
     box-shadow: 4px 4px 12px 0px rgb(117 117 117 / 30%);
-    border-radius: 4px;
+    border-radius: 12px;
   }
   .ant-card-head {
     min-height: 26px;
     max-height: 26px;
+    border: 0;
     padding: 0;
     .ant-card-head-title {
       padding: 0 !important;
@@ -101,6 +108,8 @@ footer {
     b {
       font-family: cursive;
     }
+    border-top: 1px solid #f0f0f0;
+    border-radius: 12px;
   }
   .drag-icon {
     width: 100%;
@@ -121,19 +130,20 @@ footer {
   }
   .card-footer {
     position: absolute;
-    padding: 6px 0px;
+    padding: 1px 0px;
     width: 100%;
     left: 0;
     bottom: 0;
     border-top: 1px solid #f0f0f0;
+    border-radius: 12px;
     display: flex;
     justify-content: center;
   }
 
   .new-game-button {
-    border-radius: 50%;
+    border-radius: 12px;
     height: 75px;
-    width: 75px;
+    width: 100%;
     span {
       width: 40px;
       height: 40px;
@@ -160,7 +170,7 @@ footer {
 }
 
 .game-layout {
-  padding: 64px 128px;
+  padding: 32px 64px;
   background-color: aliceblue;
   border-radius: 6px;
   border: 1px solid skyblue;
@@ -181,6 +191,29 @@ footer {
   position: absolute;
   width: 100%;
   height: 26px;
+}
+
+.loading-mask {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aliceblue;
+  background-color: rgba(240, 248, 255, 0.4);
+  z-index: 9999;
+}
+
+.card-row {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  .card-col {
+    margin: 16px 4%;
+  }
 }
 
 @media screen and (max-width: 575px) {

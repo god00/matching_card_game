@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 from app import models, schemas
 from fastapi import APIRouter, Depends, HTTPException, Body, status
 from sqlalchemy.orm import Session
@@ -37,9 +38,13 @@ async def get_game(db: Session = Depends(get_db), user: schemas.User = Depends(g
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Game not found.",
         )
-    best_global_score = get_best_global_score(db)
-    best_score = get_best_score(db, user.id)
-    return {"score": game.score, "current_state": game.current_state, "id": game.id, "best_global_score": best_global_score, "best_score": best_score}
+    best_global_score = get_best_global_score(db)[0]
+    best_score = get_best_score(db, user.id)[0]
+    actions_length = len(game.actions)
+    last_action = {}
+    if actions_length > 0:
+        last_action = game.actions[-1]
+    return {"score": game.score, "current_state": game.current_state, "id": game.id, "best_global_score": best_global_score, "best_score": best_score, "last_action": last_action, "is_finished": game.matched == 6}
 
 
 @router.post("/start/")
@@ -48,20 +53,20 @@ async def create_new_game(db: Session = Depends(get_db), user: schemas.User = De
     game = game_crud.get_new_exist_game(db, user.id)
     if not game:
         game = game_crud.create_game(db, item, user.id)
-    best_global_score = get_best_global_score(db)
-    best_score = get_best_score(db, user.id)
-    return {"score": game.score, "current_state": game.current_state, "id": game.id, "best_global_score": best_global_score, "best_score": best_score}
+    best_global_score = get_best_global_score(db)[0]
+    best_score = get_best_score(db, user.id)[0]
+    return {"score": game.score, "current_state": game.current_state, "id": game.id, "best_global_score": best_global_score, "best_score": best_score, "is_finished": False}
 
 
 @router.patch("/action/")
-async def play_game(db: Session = Depends(get_db), user: schemas.User = Depends(get_current_active_user), body: schemas.GameAction = Body(..., embed=True)):
-    if body.i < 0 or body.i > 2 or body.j < 0 or body.j > 3:
+async def play_game(db: Session = Depends(get_db), user: schemas.User = Depends(get_current_active_user), action: schemas.GameAction = Body(..., embed=True), game_id: int = Body(...)):
+    if action.row < 0 or action.row > 2 or action.col < 0 or action.col > 3:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid parameter",
         )
 
-    game = game_crud.get_game(db, user.id, body.game_id)
+    game = game_crud.get_game(db, user.id, game_id)
 
     if not game:
         raise HTTPException(
@@ -78,27 +83,35 @@ async def play_game(db: Session = Depends(get_db), user: schemas.User = Depends(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Game Over.",
         )
-    elif game.current_state[body.i][body.j] != 0:
+    elif game.current_state[action.row][action.col] != 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="This card is already opened.",
         )
 
     actions_length = len(game.actions)
+    last_action = {}
     if actions_length > 0:
         last_action = game.actions[-1]
     is_even_action = len(game.actions) % 2 == 0
 
-    card_value = game.answer[body.i][body.j]
+    card_value = game.answer[action.row][action.col]
 
     game.score += 1
 
-    game.actions.append({"i": body.i, "j": body.j})
+    action_dict = {"row": action.row, "col": action.col, "matched": False, "is_even_action": is_even_action, "is_finished": False}
+    is_finished = False
+
+    current_state = game.current_state
     if actions_length > 0 and not is_even_action:
-        if game.answer[last_action['i']][last_action['j']] == card_value:
+        if game.answer[last_action['row']][last_action['col']] == card_value:
             # matched
-            game.current_state[body.i][body.j] = card_value
+            game.current_state[action.row][action.col] = card_value
             game.matched += 1
+            action_dict['matched'] = True
+            if game.matched == 6:
+                action_dict['is_finished'] = True
+                is_finished = True
             if game.score < 12 and game.matched == 6:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
@@ -106,12 +119,16 @@ async def play_game(db: Session = Depends(get_db), user: schemas.User = Depends(
                 )
         else:
             # no matched
-            game.current_state[last_action['i']][last_action['j']] = 0
+            current_state = copy.deepcopy(game.current_state)
+            current_state[action.row][action.col] = card_value
+            # current_state
+            game.current_state[last_action['row']][last_action['col']] = 0
     else:
-        game.current_state[body.i][body.j] = card_value
+        game.current_state[action.row][action.col] = card_value
 
+    game.actions.append(action_dict)
     flag_modified(game, "actions")
     flag_modified(game, "current_state")
     db.commit()
     db.refresh(game)
-    return {"score": game.score, "current_state": game.current_state, "id": game.id, "card_value": card_value}
+    return {"score": game.score, "current_state": current_state, "id": game.id, "card_value": card_value, "last_action": last_action, "is_finished": is_finished}
