@@ -3,7 +3,6 @@ import type { AppProps, AppContext } from 'next/app'
 import '../styles.scss'
 
 import { handleAuthSSR } from "../utils/handleAuthSSR"
-import GamePage from './game'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />

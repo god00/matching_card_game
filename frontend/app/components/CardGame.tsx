@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, notification, Spin, Modal } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
 import Card from './Card'
@@ -13,6 +13,7 @@ type Props = {
 
 const CardGame = ({ userID }: Props) => {
   const localKey = `mcg-current-game-${userID}`
+  const player = useRef() as React.MutableRefObject<HTMLAudioElement>
   const [gameID, setGameID] = useState<string | null>()
   const [loading, setLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -112,6 +113,10 @@ const CardGame = ({ userID }: Props) => {
                 currentStateCopied[row][col] = 0
                 currentStateCopied[lastRow][lastCol] = 0
                 setCurrentState(currentStateCopied)
+              } else {
+                if (player.current.paused) {
+                  player.current.play()
+                }
               }
               setIsReady(true)
             }, 350)
@@ -122,6 +127,12 @@ const CardGame = ({ userID }: Props) => {
 
         if (data.isFinished) {
           setCongratVisibleModal(true)
+          if (bestScore != null && data.score < bestScore) {
+            setBestScore(data.score)
+          }
+          if (bestGlobalScore != null && data.score < bestGlobalScore) {
+            setBestGlobalScore(data.score)
+          }
         }
       }
       return true
@@ -157,6 +168,7 @@ const CardGame = ({ userID }: Props) => {
           </div>
           :
           <div className='game-layout'>
+            <audio src='/card-matched.mp3' ref={player} />
             <Modal
               title='Congratulations!'
               visible={congratVisibleModal}
@@ -165,8 +177,9 @@ const CardGame = ({ userID }: Props) => {
                 setCongratVisibleModal(false)
                 onClickNewGame()
               }}
-              cancelText='No'
+              cancelText='Nope'
               onCancel={() => setCongratVisibleModal(false)}
+              maskClosable={false}
               destroyOnClose={true}
             >
               {`You won, your score is ${score}`}

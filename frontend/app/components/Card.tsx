@@ -3,6 +3,7 @@ import { Card, CardProps } from 'antd';
 import ReactCardFlip from 'react-card-flip'
 
 const cardAspectRatio = 1.4
+const defaultWidth = 120
 
 interface NewCardProps extends CardProps {
     state?: 'back' | 'front'
@@ -21,7 +22,6 @@ const MyCard = connectCard(Card)
 
 type Props = {
     width?: number
-    height?: number
     value?: any
     flipped?: boolean
     row: number
@@ -31,11 +31,10 @@ type Props = {
     onFlipped?: (row?: number, col?: number) => any
 }
 
-const CardFlip = ({ width = 120, height, flipped = false, value: cardValue, row, col, isReady = true, onSelectCard, onFlipped }: Props) => {
-    if (height == null) {
-        height = Math.floor(width * cardAspectRatio)
-    }
+const CardFlip = ({ width, flipped = false, value: cardValue, row, col, isReady = true, onSelectCard, onFlipped }: Props) => {
     const player = useRef() as React.MutableRefObject<HTMLAudioElement>
+    const [widthCard, setWidthCard] = useState(defaultWidth)
+    const [heightCard, setHeightCard] = useState(Math.floor(defaultWidth * cardAspectRatio))
     const [value, setValue] = useState(cardValue)
     const [prevValue, setPrevValue] = useState(0)
     const [isFlipped, setIsFlipped] = useState(false)
@@ -43,8 +42,24 @@ const CardFlip = ({ width = 120, height, flipped = false, value: cardValue, row,
     let timeoutID: any
 
     useEffect(() => {
+        if (width == null) {
+            if (window.innerWidth < 575) {
+                setWidthCard(54)
+                setHeightCard(Math.floor(54 * cardAspectRatio))
+            }
+        }
+    })
+
+    useEffect(() => {
+        if (width != null) {
+            setWidthCard(width)
+            setHeightCard(Math.floor(width * cardAspectRatio))
+        }
+    }, [width])
+
+    useEffect(() => {
         setIsFlipped(flipped)
-        if (flipped !== isFlipped) {
+        if (flipped !== isFlipped && player.current.paused) {
             player.current.play()
         }
     }, [flipped])
@@ -84,12 +99,14 @@ const CardFlip = ({ width = 120, height, flipped = false, value: cardValue, row,
         }
     }
 
+    const styleCard = { width: widthCard, height: heightCard }
+
     return (
         <>
             <audio src='/card-flip.mp3' ref={player} />
             <ReactCardFlip
                 isFlipped={isFlipped}
-                cardStyles={{ front: { width, height }, back: { width, height } }}
+                cardStyles={{ front: styleCard, back: styleCard }}
                 flipSpeedBackToFront={0.2}
                 flipSpeedFrontToBack={0.2}
             >
@@ -98,7 +115,7 @@ const CardFlip = ({ width = 120, height, flipped = false, value: cardValue, row,
                         className='card'
                         card='front'
                         ready={isReady ? 'true' : 'false'}
-                        style={{ width, height, backgroundColor: 'ghostwhite' }}
+                        style={{ ...styleCard, backgroundColor: 'ghostwhite' }}
                         hoverable
                         onClick={selectCard}
                     >
@@ -111,7 +128,7 @@ const CardFlip = ({ width = 120, height, flipped = false, value: cardValue, row,
                         className='card'
                         card='back'
                         state={isFlipped ? 'back' : 'front'}
-                        style={{ width, height }}
+                        style={styleCard}
                         hoverable
                     >
                         {!isFlipped ? prevValue : value}

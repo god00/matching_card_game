@@ -9,9 +9,11 @@ body,
 }
 
 footer {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
+  position: relative;
+  width: 250px;
+  margin-left: 50%;
+  margin-top: 40px;
+  padding-bottom: 10px;
   transform: translate(-50%, -50%);
 }
 
@@ -89,6 +91,10 @@ footer {
 .draggable {
   z-index: 99;
   position: absolute;
+  .ant-card {
+    min-height: 412px;
+  }
+
   .ant-card-bordered {
     box-shadow: 4px 4px 12px 0px rgb(117 117 117 / 30%);
     border-radius: 12px;
@@ -216,7 +222,52 @@ footer {
   }
 }
 
+.score-text {
+  display: flex;
+  justify-content: center;
+  font-size: 25px;
+}
+
 @media screen and (max-width: 575px) {
+  .score-bar {
+    width: calc(100% + 64px);
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: -10px 0 12px -35px;
+    .score-item {
+      display: flex;
+      flex-direction: column;
+      p {
+        margin: 0;
+        white-space: nowrap;
+      }
+      b {
+        margin-left: 4px;
+        text-align: center;
+      }
+    }
+
+    .ant-btn {
+      width: 50px;
+      height: 44px;
+      padding: 0px;
+      span {
+        white-space: break-spaces;
+        font-size: 10px;
+      }
+    }
+  }
+
+  .login-footer {
+    margin-left: 16%;
+  }
+
+  footer {
+    font-size: 12px;
+    margin-left: 60%;
+  }
+
   .game-title {
     font-size: 48px;
     margin-top: 7%;
@@ -242,6 +293,21 @@ footer {
     max-width: 100%;
     .ant-col-offset-8 {
       margin-left: 0;
+    }
+  }
+
+  .card {
+    &[card="back"] {
+      .ant-card-body {
+        font-size: 32px;
+      }
+    }
+
+    &[card="front"] {
+      .ant-card-body {
+        height: calc(100% - 8px);
+        margin: 4px;
+      }
     }
   }
 }

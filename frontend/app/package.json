@@ -1,6 +1,6 @@
 {
   "name": "matching-card-game",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -19,9 +19,7 @@
     "react-cookie": "^4.0.3",
     "react-dom": "^17.0.1",
     "react-draggable": "^4.4.3",
-    "react-sound": "^1.2.0",
-    "sass": "^1.32.7",
-    "use-sound": "^2.0.1"
+    "sass": "^1.32.7"
   },
   "devDependencies": {
     "@types/node": "^12.19.16",
