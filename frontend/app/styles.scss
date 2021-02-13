@@ -1,0 +1,313 @@
+@import "~antd/dist/antd.min.css";
+
+html,
+body,
+[id="__next"] {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+footer {
+  position: relative;
+  width: 250px;
+  margin-left: 50%;
+  margin-top: 40px;
+  padding-bottom: 10px;
+  transform: translate(-50%, -50%);
+}
+
+.layout-main {
+  min-height: 100%;
+  height: 100%;
+  width: inherit;
+  padding: 20px 20px 60px;
+}
+
+.form-login {
+  width: 350px;
+}
+
+.login-tail {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 33.33%;
+  .remember-form {
+    .ant-col {
+      max-width: 100%;
+    }
+  }
+}
+
+.login-footer {
+  margin-left: 33.33%;
+  a {
+    margin-left: 6px;
+  }
+}
+
+.card {
+  &[card="back"] {
+    .ant-card-body {
+      border: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 64px;
+      font-family: cursive;
+      cursor: auto;
+      user-select: none;
+    }
+  }
+  &[card="front"] {
+    &[ready="false"] {
+      cursor: auto;
+      user-select: none;
+    }
+    .ant-card-body {
+      height: calc(100% - 32px);
+      margin: 16px;
+      background-color: whitesmoke;
+    }
+  }
+  .ant-card-body {
+    display: flex;
+    border: 1px solid gray;
+    border-radius: 2px;
+    padding: 4px;
+  }
+
+  &.ant-card-hoverable {
+    border-color: gray;
+  }
+
+  &.ant-card-hoverable:hover {
+    border-color: #a8a8a8;
+    box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%);
+  }
+}
+
+.draggable {
+  z-index: 99;
+  position: absolute;
+  .ant-card {
+    min-height: 412px;
+  }
+
+  .ant-card-bordered {
+    box-shadow: 4px 4px 12px 0px rgb(117 117 117 / 30%);
+    border-radius: 12px;
+  }
+  .ant-card-head {
+    min-height: 26px;
+    max-height: 26px;
+    border: 0;
+    padding: 0;
+    .ant-card-head-title {
+      padding: 0 !important;
+    }
+  }
+  .ant-card-body {
+    cursor: auto;
+    height: 60vh;
+    b {
+      font-family: cursive;
+    }
+    border-top: 1px solid #f0f0f0;
+    border-radius: 12px;
+  }
+  .drag-icon {
+    width: 100%;
+    color: gray;
+    display: flex;
+    justify-content: center;
+
+    b:first-child {
+      margin-right: 1px;
+    }
+    b:nth-child(2) {
+      margin-right: 1px;
+    }
+
+    span {
+      font-size: 20px;
+    }
+  }
+  .card-footer {
+    position: absolute;
+    padding: 1px 0px;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    border-top: 1px solid #f0f0f0;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .new-game-button {
+    border-radius: 12px;
+    height: 75px;
+    width: 100%;
+    span {
+      width: 40px;
+      height: 40px;
+      white-space: normal;
+    }
+  }
+}
+
+.game-title {
+  font-size: 64px;
+  margin-top: 7%;
+  margin-bottom: 40px;
+  font-family: cursive;
+  width: 350px;
+  text-align: center;
+  line-height: 72px;
+}
+
+.game-start-layout {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-layout {
+  padding: 32px 64px;
+  background-color: aliceblue;
+  border-radius: 6px;
+  border: 1px solid skyblue;
+}
+
+.start-button-layout {
+  display: flex;
+  margin-bottom: 10%;
+  button:nth-child(2) {
+    margin-left: 120px;
+  }
+}
+
+.cursor {
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 26px;
+}
+
+.loading-mask {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aliceblue;
+  background-color: rgba(240, 248, 255, 0.4);
+  z-index: 9999;
+}
+
+.card-row {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  .card-col {
+    margin: 16px 4%;
+  }
+}
+
+.score-text {
+  display: flex;
+  justify-content: center;
+  font-size: 25px;
+}
+
+@media screen and (max-width: 575px) {
+  .score-bar {
+    width: calc(100% + 64px);
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: -10px 0 12px -35px;
+    .score-item {
+      display: flex;
+      flex-direction: column;
+      p {
+        margin: 0;
+        white-space: nowrap;
+      }
+      b {
+        margin-left: 4px;
+        text-align: center;
+      }
+    }
+
+    .ant-btn {
+      width: 50px;
+      height: 44px;
+      padding: 0px;
+      span {
+        white-space: break-spaces;
+        font-size: 10px;
+      }
+    }
+  }
+
+  .login-footer {
+    margin-left: 16%;
+  }
+
+  footer {
+    font-size: 12px;
+    margin-left: 60%;
+  }
+
+  .game-title {
+    font-size: 48px;
+    margin-top: 7%;
+    margin-bottom: 40px;
+    font-family: cursive;
+    width: 250px;
+    text-align: center;
+    line-height: 72px;
+  }
+
+  .start-button-layout {
+    button:nth-child(2) {
+      margin-left: 40px;
+    }
+  }
+
+  .form-login {
+    width: inherit;
+  }
+
+  .login-tail {
+    margin-left: 0;
+    max-width: 100%;
+    .ant-col-offset-8 {
+      margin-left: 0;
+    }
+  }
+
+  .card {
+    &[card="back"] {
+      .ant-card-body {
+        font-size: 32px;
+      }
+    }
+
+    &[card="front"] {
+      .ant-card-body {
+        height: calc(100% - 8px);
+        margin: 4px;
+      }
+    }
+  }
+}
