@@ -1,4 +1,4 @@
-# bluepi_test
+# Matching Card Game
 install
  - python3
  - install pip3
