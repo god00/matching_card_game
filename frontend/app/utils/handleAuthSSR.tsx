@@ -33,7 +33,7 @@ export const handleAuthSSR = async (req?: IncomingMessage, res?: ServerResponse,
         return { isAuthenticated: true, userID: decoded && decoded.id }
     } catch (err) {
         // redirect to login
-        if (res && pathname !== '/login') {
+        if (res && res.writeHead && pathname !== '/login' && pathname !== '/') {
             res.writeHead(302, {
                 Location: '/login'
             })

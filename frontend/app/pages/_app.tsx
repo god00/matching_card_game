@@ -15,7 +15,7 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext);
   const result = await handleAuthSSR(req, res, pathname)
   if (result.isAuthenticated && pathname === '/') {
-    if (res) {
+    if (res && res.writeHead) {
       res.writeHead(302, {
         Location: '/game'
       })

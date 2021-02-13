@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  database:
+    image: postgres
+    restart: unless-stopped
+    env_file:
+      - ./backend/app/.env
+    volumes:
+      - ./init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+    ports:
+      - "5433:5432"
+    networks:
+      - local
+  backend:
+    restart: unless-stopped
+    build: ./backend/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    networks:
+      - local
+  frontend:
+    restart: unless-stopped
+    build: ./frontend/app
+    ports:
+      - "3000:3000"
+networks:
+  local:
+    driver: bridge

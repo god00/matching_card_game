@@ -2,6 +2,9 @@
 
 How to install
 
+Database
+ - install postgres version >= 12
+
 Backend
  - install python3
  - install pip3
