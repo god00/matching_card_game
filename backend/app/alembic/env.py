@@ -21,13 +21,11 @@ config = context.config
 
 # this will overwrite the ini-file sqlalchemy.url path
 # with the path given in the config of the main code
-config.set_main_option("sqlalchemy.url", "postgresql+psycopg2://%s:%s@%s:%s/%s" % (
-    os.getenv("DB_USER"),
-    os.getenv("DB_PASS"),
-    os.getenv("DB_HOST", 'localhost'),
-    os.getenv("DB_PORT", 5432),
-    os.getenv("DB_NAME")
-))
+
+from app.db.get_db_url import get_db_url
+
+db_url = get_db_url()
+config.set_main_option("sqlalchemy.url", db_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -46,6 +44,7 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+print("Connecting to database URL= \033[94m%s\033[0m" % (db_url))
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.

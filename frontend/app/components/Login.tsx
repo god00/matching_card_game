@@ -25,7 +25,7 @@ const Login = () => {
             .catch(err => {
                 notification.error({
                     message: 'Error',
-                    description: err.response.data.detail
+                    description: err.response?.data?.detail || 'Can not access to server'
                 })
                 return { data: null }
             })
@@ -55,7 +55,7 @@ const Login = () => {
             .catch(err => {
                 notification.error({
                     message: 'Error',
-                    description: err.response.data.detail
+                    description: err.response?.data?.detail || 'Can not access to server'
                 })
             })
     }
