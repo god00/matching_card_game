@@ -3,6 +3,8 @@
 
 Matching Card Game is a card game in which 12 cards are matched. Each card has a number on the back. Enjoys.
 
+## Live Demo
+* [Demo](http://54.151.242.228/)
 ## Technologies
 Matching Card Game is created with:
 * [Fastapi](https://fastapi.tiangolo.com/)
