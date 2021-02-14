@@ -1,5 +1,9 @@
 @import "~antd/dist/antd.min.css";
 
+html {
+  -webkit-font-smoothing: antialiased !important;
+}
+
 html,
 body,
 [id="__next"] {
