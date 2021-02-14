@@ -4,6 +4,7 @@ import Head from 'next/head'
 type Props = {
   children?: ReactNode
   title?: string
+  page?: string
 }
 
 const Layout = ({ children, title = 'Matching Card Game' }: Props) => (
