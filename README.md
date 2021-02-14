@@ -106,6 +106,8 @@ First, you need to clone this project by run command
 	```
 - server is running on http://localhost:3000
 
+## API Docs
+After you run backend, The API Docs is on http://localhost:8000/docs
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
