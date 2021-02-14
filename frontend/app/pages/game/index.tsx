@@ -1,13 +1,9 @@
 import Layout from '../../components/Layout'
 import CardGame from '../../components/CardGame'
-
-type Props = {
-    isAuthenticated: boolean
-    userID?: number
-}
+import { Props } from '../../types/'
 
 const GameIndex = (pageProps: Props) => (
-    <Layout>
+    <Layout page="game">
         <CardGame {...pageProps} />
     </Layout>
 )

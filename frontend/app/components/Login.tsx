@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Router from 'next/router'
-import { Form, Input, Button, Checkbox, notification } from 'antd'
 import { Cookies } from 'react-cookie'
+import { Form, Input, Button, Checkbox, notification } from 'antd'
 import { loginAPI } from '../api/auth/login'
 import { registerAPI } from '../api/auth/register'
 import FormRegister, { IFormRegister } from './FormRegister'
@@ -31,10 +31,19 @@ const Login = () => {
             })
         if (response && response.data) {
             const { access_token: token } = response.data
-
-            if (remember) {
-                cookies.set('token', token)
+            if (!token) {
+                notification.error({
+                    message: 'Error',
+                    description: 'Something went wrong, Please try again later'
+                })
+                return
             }
+            if (remember) {
+                localStorage.setItem('remember', remember)
+            } else {
+                sessionStorage.setItem('remember', remember)
+            }
+            cookies.set('token', token)
             notification.success({ message: 'Success', description: 'Login successfully' })
             // go to /game
             Router.push('/game')
@@ -75,7 +84,7 @@ const Login = () => {
                 name="login"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
-                // onFinishFailed={onFinishFailed}
+            // onFinishFailed={onFinishFailed}
             >
                 <Form.Item
                     label="Username"

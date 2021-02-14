@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
+import Router from 'next/router'
+import { Cookies } from 'react-cookie'
 import { Button, notification, Spin, Modal } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
 import Card from './Card'
 import SideBar from './SideBar'
 import { startNewGameAPI, continueGameAPI, actionGameAPI } from '../api/game'
 import { IGamePayLoad } from '../api/game/common'
+import { Props } from '../types'
 
-type Props = {
-  isAuthenticated?: boolean
-  userID?: number
-}
+const cookies = new Cookies()
 
 const CardGame = ({ userID }: Props) => {
   const localKey = `mcg-current-game-${userID}`
@@ -28,7 +28,15 @@ const CardGame = ({ userID }: Props) => {
 
   useEffect(() => {
     // Update the document title using the browser API
-    setGameID(localStorage.getItem(localKey))
+    if (userID != null) {
+      setGameID(cookies.get(localKey))
+    } else {
+      notification.error({
+        message: 'Error',
+        description: 'Something went wrong, Please login again.'
+      })
+      Router.push('/login')
+    }
   })
 
   const setData = (data: IGamePayLoad) => {
@@ -53,7 +61,9 @@ const CardGame = ({ userID }: Props) => {
     if (data) {
       const { id: gameID } = data
       // save game_id to local
-      localStorage.setItem(localKey, `${gameID}`)
+      if (gameID != null) {
+        cookies.set(localKey, gameID)
+      }
       setData(data)
       setIsPlaying(true)
     }
@@ -127,10 +137,10 @@ const CardGame = ({ userID }: Props) => {
 
         if (data.isFinished) {
           setCongratVisibleModal(true)
-          if (bestScore != null && data.score < bestScore) {
+          if ((bestScore != null && data.score < bestScore) || bestScore == null) {
             setBestScore(data.score)
           }
-          if (bestGlobalScore != null && data.score < bestGlobalScore) {
+          if ((bestGlobalScore != null && data.score < bestGlobalScore) || bestGlobalScore == null) {
             setBestGlobalScore(data.score)
           }
         }
@@ -138,6 +148,12 @@ const CardGame = ({ userID }: Props) => {
       return true
     }
     return false
+  }
+
+  const onLogout = () => {
+    cookies.remove('token')
+    localStorage.removeItem('remember')
+    Router.push('/login')
   }
 
   const renderFirstView = () => {
@@ -151,6 +167,50 @@ const CardGame = ({ userID }: Props) => {
       </div >
     )
   }
+
+  const renderGame = () => (
+    <div className='game-layout'>
+      <audio src='/card-matched.mp3' ref={player} />
+      <Modal
+        title='Congratulations!'
+        visible={congratVisibleModal}
+        okText='New Game'
+        onOk={() => {
+          setCongratVisibleModal(false)
+          onClickNewGame()
+        }}
+        cancelText='Nope'
+        onCancel={() => setCongratVisibleModal(false)}
+        maskClosable={false}
+        destroyOnClose={true}
+      >
+        {`You won, your score is ${score}`}
+      </Modal>
+      <SideBar
+        score={score}
+        bestScore={bestScore}
+        bestGlobalScore={bestGlobalScore}
+        onClickNewGame={onClickNewGame}
+      />
+      {currentState && currentState.map((rows, rowNum) =>
+        <div key={`row-${rowNum}`} className='card-row'>
+          {rows.map((value, colNum) =>
+            <div key={`card-col-${rowNum}-${colNum}`} className='card-col'>
+              <Card
+                key={`card-${rowNum}-${colNum}`}
+                value={value}
+                // flipped={value !== 0 && lastAction}
+                row={rowNum}
+                col={colNum}
+                isReady={isReady}
+                onSelectCard={onSelectCard}
+              ></Card>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
 
   return (
     <>
@@ -167,48 +227,16 @@ const CardGame = ({ userID }: Props) => {
             {renderFirstView()}
           </div>
           :
-          <div className='game-layout'>
-            <audio src='/card-matched.mp3' ref={player} />
-            <Modal
-              title='Congratulations!'
-              visible={congratVisibleModal}
-              okText='New Game'
-              onOk={() => {
-                setCongratVisibleModal(false)
-                onClickNewGame()
-              }}
-              cancelText='Nope'
-              onCancel={() => setCongratVisibleModal(false)}
-              maskClosable={false}
-              destroyOnClose={true}
-            >
-              {`You won, your score is ${score}`}
-            </Modal>
-            <SideBar
-              score={score}
-              bestScore={bestScore}
-              bestGlobalScore={bestGlobalScore}
-              onClickNewGame={onClickNewGame}
-            />
-            {currentState.map((rows, rowNum) =>
-              <div key={`row-${rowNum}`} className='card-row'>
-                {rows.map((value, colNum) =>
-                  <div key={`card-col-${rowNum}-${colNum}`} className='card-col'>
-                    <Card
-                      key={`card-${rowNum}-${colNum}`}
-                      value={value}
-                      // flipped={value !== 0 && lastAction}
-                      row={rowNum}
-                      col={colNum}
-                      isReady={isReady}
-                      onSelectCard={onSelectCard}
-                    ></Card>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          <>
+            <div className="logout-layout" id={`broad-${isPlaying ? 'play' : 'pause'}`}>
+              <Button onClick={onLogout}>Logout</Button>
+            </div>
+            {
+              renderGame()
+            }
+          </>
       }
+
     </>
   )
 }
